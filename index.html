@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillMap - AI 技能探索地图</title>
+    <meta name="description" content="对话驱动的技能探索地图。AI 为你定制成长路径，陪你攻克每一个知识点。" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" />
+    <style>
+      body{background-color:#0a0a0f;color:#e0e0e0;font-family:"Inter",system-ui,-apple-system,sans-serif;margin:0;padding:0}
+      #root{min-height:100vh}
+      .app-skeleton{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0a0a0f}
+      .app-skeleton-spinner{width:40px;height:40px;border:3px solid #2a2a3a;border-top-color:#4A90D9;border-radius:50%;animation:sk-spin .8s linear infinite}
+      @keyframes sk-spin{to{transform:rotate(360deg)}}
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="app-skeleton">
+        <div class="app-skeleton-spinner"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
