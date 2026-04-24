@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GenerateForm from '../components/Generate/GenerateForm';
 import GenerateAnimation from '../components/Generate/GenerateAnimation';
@@ -20,6 +20,15 @@ const GeneratePage: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatingStatus, setGeneratingStatus] = useState('正在分析你的职业目标...');
   const [localError, setLocalError] = useState<string | null>(null);
+  const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (navigateTimerRef.current) {
+        clearTimeout(navigateTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleFormSubmit = async (input: UserInput) => {
     if (isLoadingPaths || isGenerating) return;
@@ -67,7 +76,7 @@ const GeneratePage: React.FC = () => {
           const treeData = await loadTree(treeId);
           if (treeData) {
             setShowAnimation(true);
-            setTimeout(() => {
+            navigateTimerRef.current = setTimeout(() => {
               navigate(`/tree/${treeId}`);
             }, 3000);
           }
@@ -116,7 +125,7 @@ const GeneratePage: React.FC = () => {
           const treeData = await loadTree(treeId);
           if (treeData) {
             setShowAnimation(true);
-            setTimeout(() => {
+            navigateTimerRef.current = setTimeout(() => {
               navigate(`/tree/${treeId}`);
             }, 3000);
           }

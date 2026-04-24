@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { llmService } from '../llmService';
 import { getCareerPlanPrompt } from '../prompts/careerPlan';
 import { GenerateTreeRequest, CareerPlanResponse } from '../../types/backend';
-import { logger, errors } from '../utils/logger';
+import { logger, errors } from '../utils/Logger';
 
 function validateCareerPlan(data: any): boolean {
   if (!data.targetCareer || typeof data.targetCareer !== 'string') return false;

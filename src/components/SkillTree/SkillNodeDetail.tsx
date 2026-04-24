@@ -188,7 +188,7 @@ const SkillNodeDetail: React.FC<SkillNodeDetailProps> = ({ node, onClose }) => {
           </div>
         )}
 
-        {node.subSkills.length > 0 && (
+        {node.subSkills?.length > 0 && (
           <div>
             <h3 className="text-xs uppercase tracking-wider text-[#a0a0a0] mb-3">子技能</h3>
             <div className="space-y-2">
@@ -213,7 +213,7 @@ const SkillNodeDetail: React.FC<SkillNodeDetailProps> = ({ node, onClose }) => {
           </div>
         )}
 
-        {node.resources.length > 0 && (
+        {node.resources?.length > 0 && (
           <div>
             <h3 className="text-xs uppercase tracking-wider text-[#a0a0a0] mb-3">学习资源</h3>
             <div className="space-y-2">

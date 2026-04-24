@@ -36,6 +36,7 @@ function initTables(db: Database.Database) {
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
       token TEXT NOT NULL UNIQUE,
+      refresh_token TEXT UNIQUE NOT NULL,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       expires_at TEXT NOT NULL,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -127,9 +128,30 @@ function initTables(db: Database.Database) {
   `);
   db.exec(`CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)`);
 
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS tree_versions (
+      id TEXT PRIMARY KEY,
+      tree_id TEXT NOT NULL,
+      version_number INTEGER NOT NULL,
+      tree_data TEXT NOT NULL,
+      change_description TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY (tree_id) REFERENCES trees(id) ON DELETE CASCADE
+    )
+  `);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_tree_versions_tree ON tree_versions(tree_id)`);
+
   const columns = db.prepare("PRAGMA table_info(llm_logs)").all() as any[];
   const hasApiType = columns.some(col => col.name === 'api_type');
   if (!hasApiType) {
     db.exec(`ALTER TABLE llm_logs ADD COLUMN api_type TEXT NOT NULL DEFAULT 'chat'`);
+  }
+
+  const sessionColumns = db.prepare("PRAGMA table_info(sessions)").all() as any[];
+  const hasRefreshToken = sessionColumns.some(col => col.name === 'refresh_token');
+  if (!hasRefreshToken) {
+    // SQLite 不支持直接添加带 NOT NULL 约束的列，需要添加默认值
+    db.exec(`ALTER TABLE sessions ADD COLUMN refresh_token TEXT NOT NULL DEFAULT ''`);
+    db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_refresh_token ON sessions(refresh_token)`);
   }
 }

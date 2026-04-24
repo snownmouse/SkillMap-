@@ -6,6 +6,7 @@ import SkillTreeCanvas from '../components/SkillTree/SkillTreeCanvas';
 import SkillNodeDetail from '../components/SkillTree/SkillNodeDetail';
 import AppLayout from '../components/Layout/AppLayout';
 import { SkillNode } from '../types/skillTree';
+import { difyApi } from '../services/difyApi';
 
 const TreePage: React.FC = () => {
   const { state, dispatch } = useAppContext();
@@ -14,6 +15,9 @@ const TreePage: React.FC = () => {
   const { treeId: urlTreeId } = useParams<{ treeId?: string }>();
   const [activeNode, setActiveNode] = useState<SkillNode | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState('pdf');
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -25,9 +29,9 @@ const TreePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (urlTreeId) {
+    if (urlTreeId && currentTree?.id !== urlTreeId) {
       loadTree(urlTreeId);
-    } else if (trees.length > 0 && !currentTree && !urlTreeId) {
+    } else if (!urlTreeId && trees.length > 0 && !currentTree) {
       loadTree(trees[0].id);
     }
   }, [trees, currentTree, loadTree, urlTreeId]);
@@ -50,6 +54,30 @@ const TreePage: React.FC = () => {
   const handleCloseDetail = useCallback(() => {
     setActiveNode(null);
   }, []);
+
+  const handleExport = async () => {
+    if (!currentTree || !currentTree.id) return;
+    
+    setIsExporting(true);
+    try {
+      const blob = await difyApi.exportSkillTree(currentTree.id);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `skill-tree-report.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      setExportModalOpen(false);
+    } catch (error) {
+      console.error('导出失败:', error);
+      alert('导出失败，请稍后重试');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
 
 
@@ -161,8 +189,8 @@ const TreePage: React.FC = () => {
           })()}
         </div>
 
-        {trees.length > 1 && (
-          <div className="absolute bottom-4 right-4">
+        <div className="absolute bottom-4 right-4 flex gap-2">
+          {trees.length > 1 && (
             <select
               className="bg-white/90 backdrop-blur-md border border-[#e0d8cc] rounded-xl px-3 py-2 text-xs text-[#5c5c5c] cursor-pointer shadow-sm"
               onChange={(e) => handleSelectTree(e.target.value)}
@@ -172,6 +200,47 @@ const TreePage: React.FC = () => {
                 <option key={tree.id} value={tree.id}>{tree.career}</option>
               ))}
             </select>
+          )}
+          <div className="relative">
+            <button
+              className="bg-core text-black rounded-xl px-3 py-2 text-xs cursor-pointer shadow-sm flex items-center gap-1 hover:bg-core/90 transition-colors"
+              onClick={() => setExportModalOpen(!exportModalOpen)}
+            >
+              📄 导出报告
+            </button>
+          </div>
+        </div>
+
+        {exportModalOpen && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
+              <h3 className="text-lg font-bold mb-4">导出报告</h3>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">选择导出格式</label>
+                <select
+                  className="w-full border border-[#e0d8cc] rounded-lg px-3 py-2"
+                  value={exportFormat}
+                  onChange={(e) => setExportFormat(e.target.value)}
+                >
+                  <option value="html">HTML</option>
+                </select>
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 border border-[#e0d8cc] rounded-lg text-sm"
+                  onClick={() => setExportModalOpen(false)}
+                >
+                  取消
+                </button>
+                <button
+                  className="px-4 py-2 bg-core text-black border border-[#e0d8cc] rounded-lg text-sm"
+                  onClick={handleExport}
+                  disabled={isExporting}
+                >
+                  {isExporting ? '导出中...' : '导出'}
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

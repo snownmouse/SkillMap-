@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { CONFIG } from '../config';
+import { storage } from '../services/storage';
 
 interface LoginPageProps {
   onLogin?: (token: string, user: { id: string; username: string; displayName: string }) => void;
@@ -34,12 +35,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         body: JSON.stringify(body),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        setError(data.error || '操作失败');
+        let errorMsg = '操作失败';
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.error || errorMsg;
+        } catch {}
+        setError(errorMsg);
         return;
       }
+
+      const data = await response.json();
 
       if (onLogin) {
         onLogin(data.token, data.user);

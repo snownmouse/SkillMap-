@@ -210,5 +210,114 @@ export const difyApi = {
     return fetchApi<{ success: boolean; transferred: number; message: string }>('/api/trees/transfer', {
       method: 'POST'
     });
-  }
+  },
+
+  async exportSkillTree(treeId: string): Promise<Blob> {
+    try {
+      const response = await fetch(`/api/trees/${treeId}/export`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
+        body: JSON.stringify({})
+      });
+
+      if (!response.ok) {
+        let errorMsg = '导出失败';
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.error || errorMsg;
+        } catch {
+          errorMsg = `导出失败 (${response.status})`;
+        }
+        throw createError(errorMsg);
+      }
+
+      return response.blob();
+    } catch (error) {
+      console.error('导出请求失败:', error);
+      throw error;
+    }
+  },
+
+  async getChatSummary(treeId: string, nodeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/chat/${nodeId}/summary`);
+  },
+
+  async getLearningSuggestions(treeId: string, nodeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/chat/${nodeId}/suggestions`);
+  },
+
+  async searchChatMessages(treeId: string, query: string, limit = 20): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/chat/search?q=${encodeURIComponent(query)}&limit=${limit}`);
+  },
+
+  async getConversationList(treeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/chat/conversations`);
+  },
+
+  async getProgressStats(treeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/stats`);
+  },
+
+  async cancelTask(taskId: string): Promise<any> {
+    return fetchApi(`/api/tasks/${taskId}/cancel`, {
+      method: 'POST',
+    });
+  },
+
+  async importSkillTree(treeData: any): Promise<any> {
+    return fetchApi('/api/trees/import', {
+      method: 'POST',
+      body: JSON.stringify(treeData),
+    });
+  },
+
+  async getAchievements(treeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/achievements`);
+  },
+
+  async getLearningPlan(treeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/learning-plan`);
+  },
+
+  async createLearningPlan(treeId: string, plan: any): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/learning-plan`, {
+      method: 'POST',
+      body: JSON.stringify(plan),
+    });
+  },
+
+  async updateLearningPlan(treeId: string, planId: string, updates: any): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/learning-plan/${planId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  },
+
+  async exportJSON(treeId: string): Promise<Blob> {
+    const response = await fetch(`/api/trees/${treeId}/export-json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+    });
+    if (!response.ok) {
+      throw createError('导出JSON失败');
+    }
+    return response.blob();
+  },
+
+  async getVersions(treeId: string): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/versions`);
+  },
+
+  async restoreVersion(treeId: string, versionNumber: number): Promise<any> {
+    return fetchApi(`/api/trees/${treeId}/versions/restore`, {
+      method: 'POST',
+      body: JSON.stringify({ versionNumber }),
+    });
+  },
 };

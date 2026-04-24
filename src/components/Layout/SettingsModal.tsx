@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Moon, Sun, Trash2, Info, Github } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
+import { storage } from '../../services/storage';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   const handleClearData = () => {
     if (window.confirm('确定要清除所有本地数据吗？这将删除所有生成的技能树和对话记录。')) {
-      localStorage.clear();
+      storage.clear();
       window.location.href = '/';
     }
   };

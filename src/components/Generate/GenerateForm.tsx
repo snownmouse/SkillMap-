@@ -66,7 +66,7 @@ const GenerateForm: React.FC<GenerateFormProps> = ({ onSubmit, isLoading }) => {
   const removeSkill = (skill: string) => {
     setFormData({
       ...formData,
-      existingSkills: formData.existingSkills?.filter(s => s !== skill)
+      existingSkills: formData.existingSkills?.filter(s => s !== skill) || []
     });
   };
 

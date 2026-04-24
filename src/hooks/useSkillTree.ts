@@ -70,7 +70,7 @@ export const useSkillTree = () => {
     if (!taskId) return;
 
     let pollCount = 0;
-    const MAX_POLLS = 120;
+    const MAX_POLLS = 300; // 延长到300次，每次2秒，总共10分钟
     const POLL_INTERVAL = 2000;
 
     const poll = async () => {
@@ -159,13 +159,6 @@ export const useSkillTree = () => {
       cancelPolling();
     };
   }, [state.auth?.token, loadTrees, cancelPolling]);
-
-  // 当登录状态变化时，重新加载技能树列表
-  useEffect(() => {
-    if (state.auth?.token) {
-      loadTrees();
-    }
-  }, [state.auth?.token, loadTrees]);
 
   return {
     trees,

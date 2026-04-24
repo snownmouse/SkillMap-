@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <div style={{ maxWidth: '768px', width: '100%', spaceY: '48px' }}>
+      <div style={{ maxWidth: '768px', width: '100%', display: 'flex', flexDirection: 'column', gap: '48px' }}>
         <div style={{ marginBottom: '48px' }}>
           <div style={{ display: 'inline-block', padding: '12px', backgroundColor: 'rgba(123,179,138,0.1)', borderRadius: '16px', border: '1px solid rgba(123,179,138,0.2)', marginBottom: '16px' }}>
             <span style={{ fontSize: '48px' }}>🗺️</span>

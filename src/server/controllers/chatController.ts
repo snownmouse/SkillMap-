@@ -4,7 +4,7 @@ import { llmService } from '../llmService';
 import { getCheckinChatPrompt } from '../prompts/checkinChat';
 import { ChatMessageService, ProgressService, TimelineService, AbilityService } from '../services';
 import { ChatMessageRepository, TreeRepository, AbilityRepository } from '../repositories';
-import { logger, errors } from '../utils/logger';
+import { logger, errors } from '../utils/Logger';
 
 export const chatController = {
   async sendMessage(req: Request, res: Response) {
@@ -21,7 +21,12 @@ export const chatController = {
         throw errors.notFound('技能树');
       }
 
-      const treeData = JSON.parse(treeRow.tree_data);
+      let treeData: any;
+      try {
+        treeData = JSON.parse(treeRow.tree_data);
+      } catch (e) {
+        throw errors.validation('技能树数据格式错误');
+      }
       const node = treeData.nodes[nodeId];
       if (!node) {
         throw errors.notFound('技能节点');
@@ -152,7 +157,7 @@ export const chatController = {
       res.json({
         messages: rows.map((r: any) => ({
           ...r,
-          metadata: r.metadata ? JSON.parse(r.metadata) : null
+          metadata: r.metadata ? (() => { try { return JSON.parse(r.metadata); } catch { return null; } })() : null
         }))
       });
     } catch (error) {
