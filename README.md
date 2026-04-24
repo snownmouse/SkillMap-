@@ -79,12 +79,12 @@ npm run dev
 启动成功后，会看到类似这样的输出：
 
 ```
-SkillMap server running on http://localhost:3000
-WebSocket server available at ws://localhost:3000/ws
+SkillMap server running on http://localhost:3008
+WebSocket server available at ws://localhost:3008/ws
 LLM Provider: ark
 ```
 
-打开浏览器，访问 `http://localhost:3000` 即可开始使用。
+打开浏览器，访问 `http://localhost:3008` 即可开始使用。
 
 > **说明**：项目采用前后端一体化架构，`npm run dev` 会同时启动前端（Vite 开发服务器）和后端（Express API），无需分别启动。
 
@@ -135,3 +135,52 @@ npm run build
 ## 📄 许可证
 
 MIT License
+
+## 🤔 常见问题
+
+### Q: 如何选择合适的 LLM 提供商？
+
+A: 推荐使用火山引擎 (Ark)，因为它支持完整的功能，包括思考模式和网络搜索。如果 Ark 不可用，可以使用硅基流动 (SiliconFlow) 作为备用。
+
+### Q: 如何获取 API Key？
+
+A: 不同 LLM 提供商的 API Key 获取方式不同：
+- **火山引擎 (Ark)**：访问 [火山引擎控制台](https://console.volcengine.com/) 创建 API Key
+- **硅基流动 (SiliconFlow)**：访问 [硅基流动控制台](https://cloud.siliconflow.cn/) 创建 API Key
+- **DeepSeek**：访问 [DeepSeek 官网](https://www.deepseek.com/) 创建 API Key
+- **Gemini**：访问 [Google AI Studio](https://makersuite.google.com/) 创建 API Key
+
+### Q: 遇到端口冲突怎么办？
+
+A: 可以通过以下步骤解决：
+1. 查看占用端口的进程：`netstat -ano | findstr :端口号`
+2. 结束占用端口的进程：`taskkill /PID 进程ID /F`
+3. 或者修改 `.env` 文件中的 `PORT` 参数，使用其他端口
+
+### Q: 依赖安装失败怎么办？
+
+A: 可以尝试使用国内镜像：
+```bash
+npm install --registry=https://registry.npmmirror.com
+```
+
+### Q: 数据存储在哪里？
+
+A: 数据存储在本地的 SQLite 数据库中，位于 `data/skillmap.db` 文件。
+
+## 📚 文档
+
+- [快速入门指南](docs/README.md)
+- [环境配置指南](docs/ENVIRONMENT_GUIDE.md)
+- [构建部署指南](docs/BUILD_GUIDE.md)
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request 来帮助改进 SkillMap！
+
+## 📞 联系我们
+
+如果您在使用过程中遇到任何问题，或者有任何建议，请联系我们：
+
+- **GitHub Issues**：在 GitHub 仓库中提交 issue
+- **Email**：contact@skillmap.com

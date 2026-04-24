@@ -120,7 +120,7 @@ DB_PATH=./data/skillmap.db
 
 ```env
 # 服务器配置
-PORT=3000
+PORT=3008
 NODE_ENV=development
 ```
 
@@ -140,7 +140,7 @@ npm run dev
 ```
 VITE v6.0.1  ready in 3.28 s
 
-➜  Local:   http://localhost:3000/
+➜  Local:   http://localhost:3008/
 ➜  Network: use --host to expose
 ```
 

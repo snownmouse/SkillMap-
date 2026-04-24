@@ -66,7 +66,7 @@ npm run preview
 
 1. **准备服务器**：
    - 安装 Node.js 和 npm
-   - 配置防火墙，开放端口 3000
+69→   - 配置防火墙，开放端口 3008
 
 2. **上传项目**：
    - 将项目文件上传到服务器
@@ -109,7 +109,7 @@ npm run preview
    
    RUN npm run build
    
-   EXPOSE 3000
+   EXPOSE 3008
    
    CMD ["npm", "run", "start"]
    ```
@@ -121,7 +121,7 @@ npm run preview
 
 3. **运行容器**：
    ```bash
-   docker run -p 3000:3000 --env-file .env skillmap
+   docker run -p 3008:3008 --env-file .env skillmap
    ```
 
 ## 4. 环境变量配置
@@ -130,7 +130,7 @@ npm run preview
 
 ```env
 # 服务器配置
-PORT=3000
+PORT=3008
 NODE_ENV=production
 CORS_ORIGIN=https://your-production-domain.com
 

@@ -78,11 +78,11 @@ npm run dev
 ```
 VITE v6.0.1  ready in 3.28 s
 
-➜  Local:   http://localhost:3000/
+➜  Local:   http://localhost:3008/
 ➜  Network: use --host to expose
 ```
 
-打开浏览器，访问 `http://localhost:3000` 即可开始使用。
+打开浏览器，访问 `http://localhost:3008` 即可开始使用。
 
 ## 4. 首次使用
 
